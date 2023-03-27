@@ -15,6 +15,8 @@ from sklearn.model_selection import train_test_split
 from lifelines import KaplanMeierFitter
 import matplotlib.pyplot as plt
 import psutil
+#import tempfile
+#import os
 
 # Define a function to get the current CPU and memory usage of the system
 def get_system_usage():
@@ -54,11 +56,32 @@ def main():
         #Set Title page
         st.title('Survival Analysis')
         
-        # Load data
-        data_file = st.file_uploader('Upload data file', type=['xlsx'])
-        if data_file is not None:
-            data = pd.read_excel(data_file, engine='openpyxl')
+        if 'available_data' not in st.session_state:
+            st.session_state['available_data'] = False
         
+        # Load data
+        data_file = st.file_uploader('Upload data file', type=['xlsx', 'csv'])
+        
+
+        if data_file is not None:
+            if '.xlsx' in data_file.name or 'csv' in data_file.name:
+                try:
+                    if '.xlsx' in data_file.name:
+                        data = pd.read_excel(data_file, engine='openpyxl')
+                        st.session_state['available_data'] = True
+                    elif '.csv' in data_file.name:
+                        data = pd.read_csv(data_file)
+                        st.session_state['available_data'] = True
+                    #st.write(data)
+                except Exception as e:
+                    st.write(f"Error: {e}")
+                    st.session_state['available_data'] = False
+        else:
+            st.write('Invalid file format. Please upload an Excel file (.xlsx) or a CSV file (.csv).')
+            st.session_state['available_data'] = False
+   
+        if st.session_state['available_data']:
+
             # Set default column names
             censoring_col = None
             duration_col = None
