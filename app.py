@@ -183,12 +183,14 @@ def main():
                     X = data_onehot.drop([censoring_col, duration_col], axis=1)
                     y = sksurv.util.Surv.from_dataframe(censoring_col, duration_col, data_onehot) # get y variable in usable format (events, time)
                     
-                    estimator = CoxPHSurvivalAnalysis()
-                    estimator.fit(X, y)
-                    score = estimator.score(X, y)
-                    st.write(pd.Series(estimator.coef_, index=X.columns))
-
-                    st.write('Entire dataset C-index = ', score)
+                    try:
+                        estimator = CoxPHSurvivalAnalysis()
+                        estimator.fit(X, y)
+                        score = estimator.score(X, y)
+                        st.write(pd.Series(estimator.coef_, index=X.columns))
+                        st.write('Entire dataset C-index = ', score)
+                    except Exception as e:
+                        st.write(f"Error: {e}")    
                                                     
                     st.subheader("Survival Curve")
                     st.write("The survival curve below shows the probability of survival over time - filtered data.")
