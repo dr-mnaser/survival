@@ -164,7 +164,7 @@ def main():
                     cat_cols = data.select_dtypes(include=['object']).columns.tolist()
                     data_onehot = data[[censoring_col, duration_col] + included_cols]
                     
-                    st.write('data_onehot before applying transform:', data_onehot)
+                    #st.write('data_onehot before applying transform:', data_onehot)
                     
                     for variable in cat_cols:
                         data_onehot[variable] = data_onehot[variable].astype('category') # changes object dtype to category dtype so it works with OneHot function 
@@ -185,9 +185,9 @@ def main():
                     X = data_onehot.drop([censoring_col, duration_col], axis=1)
                     y = sksurv.util.Surv.from_dataframe(censoring_col, duration_col, data_onehot) # get y variable in usable format (events, time)
                     
-                    st.write('X:', X)
-                    st.write('y:', y)
-                    st.write('data_onehot:', data_onehot)
+                    #st.write('X:', X)
+                    #st.write('y:', y)
+                    #st.write('data_onehot:', data_onehot)
                     
                     try:
                         estimator = CoxPHSurvivalAnalysis()
